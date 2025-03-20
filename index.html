@@ -3,56 +3,188 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
         <title>Missle Force</title>
         <style>
             body, html {
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
+                background-color: #000;
+                font-family: 'Press Start 2P', cursive;
+                overflow-x: hidden;
+            }
+
+            .main{
+                color: #0f0;
+            }
+
+            .apresentation{
+                margin-bottom: 50px;
+            }
+
+            .title{
+                display: flex;
+                justify-content: center;
+
+            }
+
+            h1{
+                font-size: medium;
+            }
+
+            p{
+                font-size: small;
+                margin: 0 5% 3% 5%;
+                line-height: 2;
             }
         </style>
     </head>
     <body>
         <canvas id="canvas"></canvas>
-    <script>
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d"); // 2D contexto
+        <section class="main">
+            <section class="apresentation">
+                <h1 class="title">Olá!<h1>
+                <h1 class="title">me chamo Ryladant</h1>
+            </section>
+            <p>
+                "Programador" desde a época da bolha da internet anos 90. Lembro que o meu
+                primeiro contato com programação foi em Pascal, o programa em sí eu não me recordo
+                mas eram saídas simples no terminal. Logo depois tentei algo em Basic,
+                 pois minha vontade era fazer programas com janelas (com gráficos e não ficar só no terminal)
+            </p>
+            <p>
+                Até que um dia eu descobri o RPG Maker 2000. Amor a primeira
+                 vista. Criei alguns joguinhos e joguei vários feitos nele. Mais tarde
+                 tive um segundo contato com o RPG Maker VX Ace. E aí sim eu decidi o que
+                 queria fazer da minha vida: JOGOS!
+            </p>
+            <p>
+                Daí pra frente minha vida se resumiu a programação, trabalho e mais programação.
+            </p>
+        </section>
+        <script>
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d"); // 2D contexto
+        
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        
+            let mouseX = canvas.width / 2;
+            let mouseY = canvas.height / 2;
+            let circles = [];
+            let missiles = [];
+        
+            canvas.addEventListener("mousemove", (event) => {
+                mouseX = event.clientX;
+                mouseY = event.clientY;
+            });
+        
+            let max_shots = 3;
+            let id = 0;
+        
+            canvas.addEventListener("click", (event) => {
+                if (circles.length < max_shots) {
+                    id += 1;
+                    let explosion = {
+                        id: id,
+                        x: event.clientX,
+                        y: event.clientY,
+                        radius: 7,
+                        color: "red"
+                    };
+                    circles.push(explosion);
+                }
+            });
+        
+            function createMissile() {
+                let startX = Math.random() * canvas.width;
+                let endX = Math.random() * canvas.width;
+                let startY = 0;
+                let endY = canvas.height;
+        
+                let missile = {
+                    start_x: startX,
+                    start_y: startY,
+                    current_x: startX,
+                    current_y: startY,
+                    end_x: endX,
+                    end_y: endY,
+                    speed: Math.random() * 2 + 1, // Velocidade aleatória (1 a 3)
+                    progress: 0, // Progresso da animação
+                    defeat: false
+                };
+        
+                missiles.push(missile);
+            }
+            createMissile()
+            setInterval(createMissile, 1500);
+        
+            function update() {
+                ctx.fillStyle = "black";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+                ctx.strokeStyle = "yellow";
+                ctx.lineWidth = 2;
+        
+                missiles.forEach(missile => {
+                    missile.progress += missile.speed / 1000;
+                    
+                    missile.current_x = missile.start_x + (missile.end_x - missile.start_x) * missile.progress;
+                    missile.current_y = missile.start_y + (missile.end_y - missile.start_y) * missile.progress;
+        
+                    ctx.beginPath();
+                    ctx.moveTo(missile.start_x, missile.start_y);
+                    ctx.lineTo(missile.current_x, missile.current_y);
+                    ctx.stroke();
+                });
+        
+                // Remove mísseis que chegaram ao final
+                missiles = missiles.filter(missile => missile.progress < 1);
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+                missiles.forEach(missile => {
+                    circles.forEach(circle => {
+                        if(
+                            missile.current_x < circle.x && missile.current_x > circle.x - circle.radius &&
+                            missile.current_y > circle.y-circle.radius && missile.current_y < circle.y+circle.radius
+                        ){
+                            missile.defeat = true
+                        }
 
-        let mouseX
-        let mouseY
+                        if(
+                            missile.current_x > circle.x && missile.current_x < circle.x + circle.radius &&
+                            missile.current_y < circle.y+circle.radius && missile.current_y > circle.y-circle.radius
+                        ){
+                            missile.defeat = true
+                        }
+                    })
+                })
 
-        canvas.addEventListener("mousemove", (event) => {
-            mouseX = event.clientX - 10
-            mouseY = event.clientY - 2
-            ctx.fillRect(mouseX, mouseY, 20, 5); 
-        });
+                missiles = missiles.filter(missile => missile.defeat === false);
 
-        canvas.addEventListener("click", (event) => {
-            ctx.fillStyle = "blue"; // Cor do círculo
-            ctx.beginPath();
-            ctx.arc(150, 150, 50, 0, Math.PI * 2); // (x, y, raio, ângulo inicial, ângulo final)
-            ctx.fill(); // Preenche o círculo
-        })
+        
+                ctx.fillStyle = "red";
+        
+                if (circles.length > 0) {
+                    for (let ex of circles) {
+                        if (ex.radius <= 25)
+                            ex.radius += 0.2;
+                        else
+                            circles.shift();
+                    }
+                }
+        
+                for (let circle of circles) {
+                    ctx.fillStyle = circle.color;
+                    ctx.beginPath();
+                    ctx.arc(circle.x, circle.y, circle.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
 
-        function update(){
-
-            ctx.fillStyle = "black"
-
-            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight); 
-
-            ctx.fillStyle = "white"; 
-
-            ctx.fillRect(mouseX, mouseY, 20, 5); 
-
-            requestAnimationFrame(update);
-        }
-
-        update()
-
-
-    </script>
+                requestAnimationFrame(update);
+            }
+        
+            update();
+        </script>
     </body>
 </html>
