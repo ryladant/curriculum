@@ -1,12 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Site no GitHub Pages</title>
-</head>
-<body>
-    <h1>Olá, Mundo!</h1>
-    <p>Este é meu site hospedado no GitHub Pages.</p>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Missle Force</title>
+        <style>
+            body, html {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d"); // 2D contexto
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouseX
+        let mouseY
+
+        canvas.addEventListener("mousemove", (event) => {
+            mouseX = event.clientX - 10
+            mouseY = event.clientY - 2
+            ctx.fillRect(mouseX, mouseY, 20, 5); 
+        });
+
+        canvas.addEventListener("click", (event) => {
+            ctx.fillStyle = "blue"; // Cor do círculo
+            ctx.beginPath();
+            ctx.arc(150, 150, 50, 0, Math.PI * 2); // (x, y, raio, ângulo inicial, ângulo final)
+            ctx.fill(); // Preenche o círculo
+        })
+
+        function update(){
+
+            ctx.fillStyle = "black"
+
+            ctx.fillRect(0, 0, window.innerWidth, window.innerHeight); 
+
+            ctx.fillStyle = "white"; 
+
+            ctx.fillRect(mouseX, mouseY, 20, 5); 
+
+            requestAnimationFrame(update);
+        }
+
+        update()
+
+
+    </script>
+    </body>
 </html>
