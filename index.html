@@ -49,6 +49,7 @@
             <section class="apresentation">
                 <h1 class="title">Olá!<h1>
                 <h1 class="title">me chamo Ryladant</h1>
+                <h1 class="title">(Nilo Almeida)</h1>
             </section>
             <p>
                 "Programador" desde a época da bolha da internet anos 90. Lembro que o meu
@@ -126,12 +127,16 @@
             function update() {
                 ctx.fillStyle = "black";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.fillStyle = "green"
+                console.log(canvas.height - 200)
+                ctx.fillRect(0, canvas.height - 100, canvas.width, 400)
         
                 ctx.strokeStyle = "yellow";
                 ctx.lineWidth = 2;
         
                 missiles.forEach(missile => {
-                    missile.progress += missile.speed / 1000;
+                    missile.progress += missile.speed/600;
                     
                     missile.current_x = missile.start_x + (missile.end_x - missile.start_x) * missile.progress;
                     missile.current_y = missile.start_y + (missile.end_y - missile.start_y) * missile.progress;
@@ -143,7 +148,7 @@
                 });
         
                 // Remove mísseis que chegaram ao final
-                missiles = missiles.filter(missile => missile.progress < 1);
+                missiles = missiles.filter(missile => missile.current_y < canvas.height - 100);
 
                 missiles.forEach(missile => {
                     circles.forEach(circle => {
