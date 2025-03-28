@@ -168,7 +168,7 @@ function clear_canvas() {
 
 function draw_ground() {
     ctx.fillStyle = "blue";
-    ctx.fillRect(0, canvas.height - 100, canvas.width, 400);
+    ctx.fillRect(0, canvas.height - canvas.height/10, canvas.width, 400);
 }
 
 function update_circles() {
@@ -216,7 +216,7 @@ function call_game_over(){
     ctx.fillStyle = "white";
     ctx.font = "15px 'Press Start 2P'";
     ctx.textAlign = "center";
-    ctx.fillText("TRY AGAIN?", canvas.width/2, canvas.height/2 + 40);
+    ctx.fillText("TRY AGAIN? PRESS F5", canvas.width/2, canvas.height/2 + 40);
 }
 
 function update() {
