@@ -8,10 +8,11 @@ export class Player {
         this.y = y - this.height / 2;
         this.flag = flag;
         this.speed = 5;
-
+        this.score = 0;
         this.keys = {};
 
-        // Captura eventos de teclado
+        console.log(`Player ${this.flag} created at (${this.x}, ${this.y})`);
+
         window.addEventListener("keydown", (event) => {
             this.keys[event.key] = true;
         });
@@ -29,8 +30,7 @@ export class Player {
             if (this.keys["w"] || this.keys["W"]) this.y -= this.speed; // Sobe com "W"
             if (this.keys["s"] || this.keys["S"]) this.y += this.speed; // Desce com "S"
         }
-
-        // Impede que o jogador saia dos limites do canvas
+        // Limita o movimento do jogador dentro da tela
         this.y = Math.max(0, Math.min(this.canvas.height - this.height, this.y));
     }
 
