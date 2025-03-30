@@ -30,9 +30,24 @@ let ball = new Ball(
     canvas.height/2
 )
 
+function showControls() {
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Player 1: Use W and S | Player 2: Use U and J", canvas.width / 2, canvas.height / 2);
+}
+
+function startGame() {
+    showControls();
+    setTimeout(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        update()
+    }, 3000);
+}
+
 function score() {
     ctx.fillStyle = "white";
-    ctx.font = "50px 'Press Start 2P'"; // Aumenta o tamanho da fonte
+    ctx.font = "50px 'Press Start 2P'";
     ctx.textAlign = "center";
 
     // Exibe o score do Player 1 no primeiro 1/4 da tela
@@ -42,7 +57,7 @@ function score() {
     ctx.fillText(`${player2.score}`, (canvas.width / 4) * 3, 100);
 }
 function start(){
-    update()
+    startGame()
 }
 
 function clear_stage(){
