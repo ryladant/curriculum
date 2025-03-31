@@ -33,11 +33,18 @@ let ball = new Ball(
 function setupTouchControls() {
     canvas.addEventListener("touchmove", (event) => {
         event.preventDefault();
-        const touch = event.touches[0];
+        const touch_1 = event.touches[0];
+        const touch_2 = event.touches[1];
         const rect = canvas.getBoundingClientRect();
         const y = touch.clientY - rect.top;
 
-        if (touch.clientX < canvas.width / 2) {
+        if (touch_1.clientX < canvas.width / 2) {
+            player2.y = y - player2.height / 2;
+        } else {
+            player1.y = y - player1.height / 2;
+        }
+
+        if (touch_2.clientX < canvas.width / 2) {
             player2.y = y - player2.height / 2;
         } else {
             player1.y = y - player1.height / 2;
