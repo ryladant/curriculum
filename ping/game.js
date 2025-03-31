@@ -30,6 +30,23 @@ let ball = new Ball(
     canvas.height/2
 )
 
+function setupTouchControls() {
+    canvas.addEventListener("touchmove", (event) => {
+        event.preventDefault();
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const y = touch.clientY - rect.top;
+
+        if (touch.clientX < canvas.width / 2) {
+            player2.y = y - player2.height / 2;
+        } else {
+            player1.y = y - player1.height / 2;
+        }
+    });
+}
+
+setupTouchControls();
+
 function showControls() {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
