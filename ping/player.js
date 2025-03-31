@@ -2,7 +2,7 @@ export class Player {
     constructor(canvas, ctx, x, y, flag) {
         this.canvas = canvas;
         this.ctx = ctx;
-        this.height = 150;
+        this.height = canvas.height / 5;
         this.width = 20;
         this.x = x;
         this.y = y - this.height / 2;
