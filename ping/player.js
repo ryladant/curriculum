@@ -7,7 +7,7 @@ export class Player {
         this.x = x;
         this.y = y - this.height / 2;
         this.flag = flag;
-        this.speed = 5;
+        this.speed = canvas.width/200;
         this.score = 0;
         this.keys = {};
 
@@ -20,6 +20,14 @@ export class Player {
         window.addEventListener("keyup", (event) => {
             this.keys[event.key] = false;
         });
+
+        window.addEventListener('resize', resizeCanvas);
+    }
+
+    resizeCanvas() {
+        if(this.x > this.canvas.width/2) {
+            this.x = this.canvas.width - this.width;
+        }
     }
 
     move() {

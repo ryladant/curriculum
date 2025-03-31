@@ -18,12 +18,12 @@ let game_over = false
 let icon = "II";
 
 function lifes(){
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "white";
     ctx.font = "10px 'Press Start 2P'";
     ctx.textAlign = "top";
     ctx.fillText("LIFE: ", 50, canvas.height - 25);
     for(let i = player.life; i >= 1;i--){
-        ctx.fillStyle = "red";
+        ctx.fillStyle = "white";
         ctx.fillRect(50+i*25, canvas.height - 37, canvas.height/50, canvas.height/50);
     }
 }

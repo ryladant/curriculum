@@ -8,8 +8,8 @@ export class Ball{
         this.x = x
         this.y = y - this.width/2
         this.ctx = ctx
-        this.speedX = 4
-        this.speedY = 4
+        this.speedX = canvas.width/200
+        this.speedY = canvas.width/200
         this.collision = false
         this.color = "white"
     }
@@ -41,6 +41,7 @@ export class Ball{
     }
 
     collision_players(players){
+
         let player1 = players[0]
         let player2 = players[1]
 
@@ -77,6 +78,7 @@ export class Ball{
     }
 
     update(canvas, ctx, players){
+        console.log(this.speedX)
         this.collision_walls(canvas, players)
         this.collision_players(players)
         this.move(ctx)

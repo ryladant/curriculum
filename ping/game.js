@@ -10,7 +10,7 @@ canvas.height = window.innerHeight;
 let player1 = new Player(
     canvas, 
     ctx,
-    canvas.width - 40, 
+    canvas.width - 20, 
     canvas.height/2,
     "p1"
 )
@@ -18,7 +18,7 @@ let player1 = new Player(
 let player2 = new Player(
     canvas, 
     ctx, 
-    20, 
+    0, 
     canvas.height/2,
     "p2"
 )
