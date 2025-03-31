@@ -33,21 +33,34 @@ let ball = new Ball(
 function setupTouchControls() {
     canvas.addEventListener("touchmove", (event) => {
         event.preventDefault();
-        const touch_1 = event.touches[0];
-        const touch_2 = event.touches[1];
         const rect = canvas.getBoundingClientRect();
-        const y = touch.clientY - rect.top;
 
-        if (touch_1.clientX < canvas.width / 2) {
-            player2.y = y - player2.height / 2;
-        } else {
-            player1.y = y - player1.height / 2;
+        if (event.touches.length > 0) {
+            const touch_1 = event.touches[0];
+            const y_1 = touch_1.clientY - rect.top;
+
+            // Se o primeiro toque estiver na esquerda, controla o player2
+            if (touch_1.clientX < canvas.width / 2) {
+                player2.y = y_1 - player2.height / 2;
+            }
+            // Se o primeiro toque estiver na direita, controla o player1
+            else {
+                player1.y = y_1 - player1.height / 2;
+            }
         }
 
-        if (touch_2.clientX < canvas.width / 2) {
-            player2.y = y - player2.height / 2;
-        } else {
-            player1.y = y - player1.height / 2;
+        if (event.touches.length > 1) {
+            const touch_2 = event.touches[1];
+            const y_2 = touch_2.clientY - rect.top;
+
+            // Se o segundo toque estiver na esquerda, controla o player2
+            if (touch_2.clientX < canvas.width / 2) {
+                player2.y = y_2 - player2.height / 2;
+            }
+            // Se o segundo toque estiver na direita, controla o player1
+            else {
+                player1.y = y_2 - player1.height / 2;
+            }
         }
     });
 }
