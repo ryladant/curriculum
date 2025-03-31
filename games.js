@@ -20,7 +20,7 @@ function drawMenu() {
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
 
-    ctx.fillText("Hora de jogar ;D", canvas.width / 2, 100);
+    ctx.fillText("Teste meus joguinhos puro suco do canvas", canvas.width / 2, 100);
 
     games.forEach((game, index) => {
         ctx.fillText(game.name, canvas.width / 2, 200 + index * 50);
