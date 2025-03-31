@@ -22,7 +22,8 @@ function drawMenu() {
 
     ctx.fillText("Escolha um dos mini-games", canvas.width / 2, 100);
 
-    ctx.fillText("Ou se preferir, apenas continue para baixo =)", canvas.width / 2, canvas.height - canvas.height/5);
+    ctx.fillText("Ou se preferir,", canvas.width / 2, canvas.height - canvas.height/5);
+    ctx.fillText("apenas role para baixo =)", canvas.width / 2, canvas.height - canvas.height/5 + 30);
 
     games.forEach((game, index) => {
         ctx.fillText(game.name, canvas.width / 2, 200 + index * 50);

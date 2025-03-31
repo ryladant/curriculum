@@ -71,7 +71,7 @@ function showControls() {
     ctx.fillStyle = "white";
     ctx.font = "30px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Player 1: Use W and S | Player 2: Use U and J", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("Player 1: Use W e S | Player 2: Use U e J", canvas.width / 2, canvas.height / 2);
 }
 
 function startGame() {
