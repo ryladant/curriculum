@@ -1,51 +1,74 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// Ajusta o tamanho do canvas para a tela
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawMenu();
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
 
 let game_on = false;
-
-
 const games = [
     { name: "Missile Force", path: "./missile_force/game.js" },
     { name: "Ping", path: "./ping/game.js" }
 ];
-
 let selectedGame = null;
 
 function drawMenu() {
-    if(!game_on){
-        ctx.fillStyle = "black";
+    if (!game_on) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Fundo gradiente dinâmico
+        let gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, "#1e3c72");
+        gradient.addColorStop(1, "#2a5298");
+        ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "white";
-        ctx.font = "30px Arial";
+        ctx.font = `${Math.max(canvas.width * 0.03, 20)}px Arial`;
         ctx.textAlign = "center";
 
-        ctx.fillText("Escolha um dos mini-games", canvas.width / 2, canvas.height/5);
-
-        ctx.fillText("Ou se preferir,", canvas.width / 2, canvas.height - canvas.height/5);
-        ctx.fillText("apenas role para baixo =)", canvas.width / 2, canvas.height - canvas.height/5 + 30);
+        ctx.fillText("Escolha um dos mini-games", canvas.width / 2, canvas.height * 0.2);
+        ctx.fillText("Ou apenas role para baixo =)", canvas.width / 2, canvas.height * 0.8);
 
         games.forEach((game, index) => {
-            ctx.fillText(game.name, canvas.width / 2, 200 + index * 50);
-        });
+            let buttonY = canvas.height * 0.35 + index * (canvas.height * 0.1);
+            let buttonWidth = canvas.width * 0.4;
+            let buttonHeight = canvas.height * 0.08;
+            let buttonX = (canvas.width - buttonWidth) / 2;
 
-        requestAnimationFrame(drawMenu)
+            // Botão
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.fillRect(buttonX, buttonY, buttonWidth, buttonHeight);
+
+            // Texto do botão
+            ctx.fillStyle = "black";
+            ctx.fillText(game.name, canvas.width / 2, buttonY + buttonHeight / 2 + 5);
+        });
+        requestAnimationFrame(drawMenu);
     }
 }
 
 canvas.addEventListener("click", (event) => {
-    if(selectedGame == null){
+    if (selectedGame == null) {
+        const mouseX = event.clientX;
         const mouseY = event.clientY;
 
         games.forEach((game, index) => {
-            const textY = 200 + index * 50;
-            if (mouseY > textY - 20 && mouseY < textY + 10) {
+            let buttonY = canvas.height * 0.35 + index * (canvas.height * 0.1);
+            let buttonWidth = canvas.width * 0.4;
+            let buttonHeight = canvas.height * 0.08;
+            let buttonX = (canvas.width - buttonWidth) / 2;
+
+            if (mouseX > buttonX && mouseX < buttonX + buttonWidth &&
+                mouseY > buttonY && mouseY < buttonY + buttonHeight) {
                 selectedGame = game;
                 loadGame(game.path);
-                game_on = true
+                game_on = true;
             }
         });
     }
@@ -54,7 +77,7 @@ canvas.addEventListener("click", (event) => {
 function loadGame(gamePath) {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+    
     const script = document.createElement("script");
     script.type = "module";
     script.src = gamePath;
@@ -62,5 +85,4 @@ function loadGame(gamePath) {
     document.body.appendChild(script);
 }
 
-// Inicia o menu
 drawMenu();
