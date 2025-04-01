@@ -13,6 +13,7 @@ const games = [
 
 let selectedGame = null;
 let mouseX = 0, mouseY = 0;
+let fireParticles = [];
 
 // Função para desenhar fundo estrelado com paralaxe
 const starLayers = Array.from({ length: 3 }, (_, i) => ({
@@ -22,10 +23,10 @@ const starLayers = Array.from({ length: 3 }, (_, i) => ({
         y: Math.random() * canvas.height,
         radius: Math.random() * 2 + 1,
         baseRadius: Math.random() * 2 + 1, // Raio base para pulsação
-        color: Math.random() < 1 / 40 ? ["red", "blue", "purple"][Math.floor(Math.random() * 3)] : "green",
+        color: Math.random() < 1 / 40 ? ["red", "blue", "purple"][Math.floor(Math.random() * 3)] : "white",
         opacity: 1,
         vx: 0,
-        vy: 0,
+        vy: Math.random() * -2 - 1, // Velocidade inicial simulando transferência
         pulseSpeed: Math.random() * 0.01 + 0.005, // Velocidade do pulsar mais suave
         pulseFactor: Math.random() * 0.3 + 0.85 // Fator de variação mais sutil
     }))
@@ -37,30 +38,50 @@ function drawBackground() {
     
     starLayers.forEach(layer => {
         layer.stars.forEach(star => {
-            star.y += layer.speed;
-            if (star.y > canvas.height) {
-                star.y = 0;
+            star.y += star.vy;
+            if (star.y < 0) {
+                star.y = canvas.height;
                 star.x = Math.random() * canvas.width;
+                star.vy = Math.random() * -2 - 1;
             }
             star.opacity = 1 - Math.min(1, (star.y / canvas.height) * 1.01);
             
-            // Aplicar pulsação garantindo que o raio nunca seja negativo
             let pulse = Math.sin(performance.now() * star.pulseSpeed) * star.pulseFactor;
             star.radius = Math.max(0.5, star.baseRadius * (1 + pulse));
             
             ctx.globalAlpha = star.opacity;
             ctx.fillStyle = star.color;
             ctx.beginPath();
-            ctx.arc(star.x, star.y, star.color === "white" ? star.radius : star.radius * 1.2, 0, Math.PI * 2);
+            ctx.arc(star.x, star.y, star.color === "white" ? star.radius : star.radius * 1.5, 0, Math.PI * 2);
             ctx.fill();
             ctx.globalAlpha = 1;
         });
     });
 }
 
+function drawFireEffect() {
+    fireParticles.forEach((particle, index) => {
+        ctx.globalAlpha = particle.alpha;
+        ctx.fillStyle = `rgba(255, ${Math.floor(100 + particle.alpha * 155)}, 0, ${particle.alpha})`;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        
+        particle.y -= particle.speed;
+        particle.alpha -= 0.02;
+        particle.size *= 0.97;
+        
+        if (particle.alpha <= 0) {
+            fireParticles.splice(index, 1);
+        }
+    });
+}
+
 function drawMenu() {
     if (!game_on) {
         drawBackground();
+        drawFireEffect();
 
         ctx.fillStyle = "#0f0";
         ctx.font = "bold 20px 'Press Start 2P', sans-serif";
@@ -85,6 +106,18 @@ function drawMenu() {
             ctx.fillStyle = isHovered ? "red" : "black";
             ctx.font = "bold 13px 'Press Start 2P', sans-serif";
             ctx.fillText(game.name, canvas.width / 2, y + 32);
+            
+            if (isHovered) {
+                for (let i = 0; i < 5; i++) {
+                    fireParticles.push({
+                        x: x + Math.random() * width,
+                        y: y,
+                        size: Math.random() * 3 + 2,
+                        speed: Math.random() * 2 + 1,
+                        alpha: 1
+                    });
+                }
+            }
         });
 
         requestAnimationFrame(drawMenu);
@@ -98,10 +131,14 @@ canvas.addEventListener("mousemove", (event) => {
 
 canvas.addEventListener("click", (event) => {
     if (selectedGame == null) {
+        const mouseX = event.clientX;
         const mouseY = event.clientY;
         games.forEach((game, index) => {
-            const textY = 200 + index * 80;
-            if (mouseY > textY && mouseY < textY + 50) {
+            let x = canvas.width / 2 - 100;
+            let y = 200 + index * 80;
+            let width = 200;
+            let height = 50;
+            if (mouseX > x && mouseX < x + width && mouseY > y && mouseY < y + height) {
                 selectedGame = game;
                 loadGame(game.path);
                 game_on = true;
